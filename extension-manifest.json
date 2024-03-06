@@ -1,0 +1,13 @@
+{
+  "name": "uex",
+  "id": "uex",
+  "description": "UE extension",
+  "version": "0.0.1",
+  "headerMenuButtons": [
+    {
+      "label": "Open Asset Picker",
+      "needsModal": true,
+      "id": "open-asset-picker"
+    }
+  ]
+}
