@@ -17,27 +17,39 @@ import { AssetSelector, DestinationSelector } from '@assets/selectors';
 import { extensionId } from "./Constants";
 import util from 'util';
 
-const imsTokenFixed = 'abc123';
-
 export default function () {
   const [guestConnection, setGuestConnection] = useState();
+  const [token, setToken] = useState("");
+
+  const init = async () => {
+    const connection = await attach({
+      id: extensionId,
+    });
+    setGuestConnection(connection);
+  };
 
   useEffect(() => {
-    (async () => {
-      console.log('getting guest connection')
-      const guestConnection = await attach({ id: extensionId });
-      setGuestConnection(guestConnection);
-      console.log(`shared context ${util.inspect(guestConnection.sharedContext, {showHidden: false, depth: null, colors: true})}`);
-    })();
+    init().catch((e) =>
+      console.log("Extension got the error during initialization:", e)
+    );
   }, []);
 
   const onCloseHandler = () => {
     guestConnection.host.modal.close();
   };
 
-  console.log(`auth ${guestConnection?.sharedContext?.get("auth")}`);
-  console.log(`ims org ${imsOrg}`);
-  console.log(`ims token ${imsToken}`);
+  // Get basic state from guestConnection
+  useEffect(() => {
+    if (!guestConnection) {
+      return;
+    }
+    const getState = async () => {
+      const context = guestConnection.sharedContext;
+      const imsToken = context.get("token");
+      setToken(imsToken);
+    };
+    getState().catch((e) => console.log("Extension error:", e));
+  }, [guestConnection]);
 
   return (
     <Provider theme={defaultTheme} colorScheme='light'>
@@ -45,7 +57,7 @@ export default function () {
         <AssetSelector
           dialogSize='fullscreen'
           apiKey="aem-assets-backend-nr-1"
-          imsToken={imsTokenFixed}
+          imsToken={token}
           handleSelection={(asset) => {
             console.log(`Selected asset: ${util.inspect(asset, {showHidden: false, depth: null, colors: true})}`);
             onCloseHandler();

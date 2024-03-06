@@ -1,3 +1,3 @@
 extensions:
-  aem/uex-assetpicker/1:
+  universal-editor/ui/1:
     $include: src/aem-uex-1/ext.config.yaml
