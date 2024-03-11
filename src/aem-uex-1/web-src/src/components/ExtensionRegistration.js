@@ -34,20 +34,19 @@ function ExtensionRegistration() {
             ];
           },
         },
-        // rightPanel: {
-        //   addRails() {
-        //     return [
-        //       // @todo YOUR RIGHT PANEL BUTTONS DECLARATION SHOULD BE HERE
-        //       {
-        //         extension: 'open-asset-picker-rail',
-        //         id: 'open-asset-picker-rail',
-        //         header: 'open-asset-picker-rail',
-        //         url: 'open-asset-picker-rail',
-        //         icon: 'OpenIn',
-        //       }
-        //     ];
-        //   },
-        // },
+        canvas: {
+          getRenderers() {
+            return [
+              // @todo YOUR RIGHT PANEL BUTTONS DECLARATION SHOULD BE HERE
+              {
+                extension: 'custom-reference-field',
+                dataType: 'reference',
+                url: 'o/index.html#/custom-reference-field',
+                icon: 'OpenIn',
+              }
+            ];
+          },
+        },
       }
     });
   };
