@@ -1,3 +1,3 @@
 module.exports = {
-  extensionId: 'om.adobe.universal-editor-assetpicker-extension'
+  extensionId: 'com.adobe.universal-editor-assetpicker-extension'
 }

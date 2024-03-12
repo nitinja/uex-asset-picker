@@ -16,16 +16,13 @@ function ExtensionRegistration() {
             return [
               // @todo YOUR HEADER BUTTONS DECLARATION SHOULD BE HERE
               {
-                id: 'open-asset-picker',
+                id: 'asset-picker-modal',
                 label: 'Open Asset Picker',
                 icon: 'OpenIn',
                 onClick() {
-                  const modalURL = "/index.html#/open-asset-picker-modal";
-                  console.log("Modal URL: ", modalURL);
-
                   guestConnection.host.modal.showUrl({
                     title: "Open Asset Picker",
-                    url: modalURL,
+                    url: "/index.html#/open-asset-picker-modal",
                     width: "80vw",
                     height: "70vh",
                   });
@@ -37,13 +34,13 @@ function ExtensionRegistration() {
         canvas: {
           getRenderers() {
             return [
-              // @todo YOUR RIGHT PANEL BUTTONS DECLARATION SHOULD BE HERE
+              // @todo YOUR CUSTOM DATA FIELD RENDERERS DECLARATION SHOULD BE HERE
               {
-                extension: 'custom-reference-field',
+                extension: 'asset-picker-field',
                 dataType: 'reference',
-                url: '/index.html#/custom-reference-field',
+                url: '/index.html#/open-asset-picker',
                 icon: 'OpenIn',
-              }
+              },
             ];
           },
         },

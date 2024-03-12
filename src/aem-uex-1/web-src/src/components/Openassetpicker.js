@@ -9,20 +9,14 @@ import {
   Content,
   defaultTheme,
   Flex,
+  TextField,
   ActionButton,
-  DialogTrigger,
-  Button,
-  Dialog,
-  Heading,
-  Header,
-  Divider,
-  Text,
-  ButtonGroup,
 } from "@adobe/react-spectrum";
 import { extensionId } from "./Constants";
 
 export default function () {
   const [guestConnection, setGuestConnection] = useState();
+  const [selection, setSelection] = useState("");
 
   const init = async () => {
     const connection = await attach({
@@ -37,29 +31,26 @@ export default function () {
     );
   }, []);
 
+  const showModal = () => {
+    guestConnection.host.modal.showUrl({
+      title: "Asset Picker",
+      url: "/index.html#/open-asset-picker-modal",
+      width: "80vw",
+      height: "70vh",
+    });
+  };
+
   return (
     <Provider theme={defaultTheme} colorScheme='light'>
       <Content>
         <Flex direction="row">
-          <DialogTrigger>
-            <ActionButton>Select asset</ActionButton>
-            {(close) => (
-              <Dialog>
-                <Heading>Internet Speed Test</Heading>
-                <Header>Connection status: Connected</Header>
-                <Divider />
-                <Content>
-                  <Text>
-                    Start speed test?
-                  </Text>
-                </Content>
-                <ButtonGroup>
-                  <Button variant="secondary" onPress={close}>Cancel</Button>
-                  <Button variant="accent" onPress={close}>Confirm</Button>
-                </ButtonGroup>
-              </Dialog>
-            )}
-          </DialogTrigger>
+          <TextField value={selection} flexGrow={1} isReadOnly />
+          <ActionButton
+            onPress={showModal}
+            aria-label='select asset'
+            marginStart="size-150">
+            Select asset
+          </ActionButton>
         </Flex>
       </Content>
     </Provider>
