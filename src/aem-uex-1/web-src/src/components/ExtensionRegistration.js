@@ -41,7 +41,7 @@ function ExtensionRegistration() {
               {
                 extension: 'custom-reference-field',
                 dataType: 'reference',
-                url: 'o/index.html#/custom-reference-field',
+                url: '/index.html#/custom-reference-field',
                 icon: 'OpenIn',
               }
             ];
