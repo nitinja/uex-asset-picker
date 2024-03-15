@@ -11,7 +11,6 @@ import {
 } from "@adobe/react-spectrum";
 import { AssetSelector } from '@assets/selectors';
 import { extensionId } from "./Constants";
-import util from 'util';
 
 export default function () {
   const [guestConnection, setGuestConnection] = useState();
@@ -32,7 +31,7 @@ export default function () {
   }, []);
 
   const onSelectionHandler = (asset) => {
-    console.log(`Selected asset: ${util.inspect(asset, {showHidden: false, depth: null, colors: true})}`);
+    localStorage.setItem('selectedAsset', asset[0]?._links['http://ns.adobe.com/adobecloud/rel/rendition'].href);
     onCloseHandler();
   };
 
@@ -54,7 +53,6 @@ export default function () {
     });
   };
 
-  // Get basic state from guestConnection
   useEffect(() => {
     if (!guestConnection) {
       return;
