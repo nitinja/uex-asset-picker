@@ -11,43 +11,19 @@ function ExtensionRegistration() {
     const guestConnection = await register({
       id: extensionId,
       methods: {
-        headerMenu: {
-          getButtons() {
+        canvas: {
+          getRenderers() {
             return [
-              // @todo YOUR HEADER BUTTONS DECLARATION SHOULD BE HERE
+              // @todo YOUR CUSTOM DATA FIELD RENDERERS DECLARATION SHOULD BE HERE
               {
-                id: 'open-asset-picker',
-                label: 'Open Asset Picker',
+                extension: 'asset-picker-field',
+                dataType: 'custom-asset',
+                url: '/index.html#/open-asset-picker',
                 icon: 'OpenIn',
-                onClick() {
-                  const modalURL = "/index.html#/open-asset-picker-modal";
-                  console.log("Modal URL: ", modalURL);
-
-                  guestConnection.host.modal.showUrl({
-                    title: "Open Asset Picker",
-                    url: modalURL,
-                    width: "80vw",
-                    height: "70vh",
-                  });
-                },
               },
             ];
           },
         },
-        // rightPanel: {
-        //   addRails() {
-        //     return [
-        //       // @todo YOUR RIGHT PANEL BUTTONS DECLARATION SHOULD BE HERE
-        //       {
-        //         extension: 'open-asset-picker-rail',
-        //         id: 'open-asset-picker-rail',
-        //         header: 'open-asset-picker-rail',
-        //         url: 'open-asset-picker-rail',
-        //         icon: 'OpenIn',
-        //       }
-        //     ];
-        //   },
-        // },
       }
     });
   };

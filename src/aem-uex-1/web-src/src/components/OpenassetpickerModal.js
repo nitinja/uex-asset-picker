@@ -5,20 +5,16 @@
 import React, { useState, useEffect } from "react";
 import { attach } from "@adobe/uix-guest";
 import {
-  Flex,
   Provider,
   Content,
   defaultTheme,
-  Text,
-  ButtonGroup,
-  Button,
 } from "@adobe/react-spectrum";
-import { AssetSelector, DestinationSelector } from '@assets/selectors';
-import { extensionId } from "./Constants";
-import util from 'util';
+import { AssetSelector } from '@assets/selectors';
+import { assetSelectedEventName, extensionId } from "./Constants";
 
 export default function () {
   const [guestConnection, setGuestConnection] = useState();
+  const [endpoint, setEndpoint] = useState("");
   const [token, setToken] = useState("");
 
   const init = async () => {
@@ -34,11 +30,29 @@ export default function () {
     );
   }, []);
 
+  const onSelectionHandler = (asset) => {
+    localStorage.setItem(assetSelectedEventName, asset[0]?._links['http://ns.adobe.com/adobecloud/rel/rendition'].href);
+    onCloseHandler();
+  };
+
   const onCloseHandler = () => {
     guestConnection.host.modal.close();
   };
 
-  // Get basic state from guestConnection
+  const filterRepos = (repos) => {
+    const repoName = endpoint.replace("https://", "").replace(/\/$/, "");
+    return repos.filter((repo) => {
+      return (
+        repo._embedded["http://ns.adobe.com/adobecloud/rel/repository"][
+          "aem:tier"
+        ] === "delivery" ||
+        repo._embedded["http://ns.adobe.com/adobecloud/rel/repository"][
+          "repo:repositoryId"
+        ] === repoName
+      );
+    });
+  };
+
   useEffect(() => {
     if (!guestConnection) {
       return;
@@ -47,36 +61,33 @@ export default function () {
       const context = guestConnection.sharedContext;
       const imsToken = context.get("token");
       setToken(imsToken);
+      const tempEditorState = await guestConnection.host.editorState.get();
+      const { connections, customTokens } = tempEditorState;
+      const tempEndpointName = Object.keys(connections).filter((key) =>
+        connections[key].startsWith("xwalk:")
+      )[0];
+      if (tempEndpointName) {
+        setEndpoint(connections[tempEndpointName].replace("xwalk:", ""));
+        if (customTokens && customTokens[tempEndpointName]) {
+          setToken(customTokens[tempEndpointName].replace("Bearer ", ""));
+        }
+      }
     };
-    getState().catch((e) => console.log("Extension error:", e));
+    getState().catch((e) => console.error("Extension error:", e));
   }, [guestConnection]);
 
   return (
     <Provider theme={defaultTheme} colorScheme='light'>
       <Content>
         <AssetSelector
+          aemTierType={['delivery', 'author']}
           dialogSize='fullscreen'
-          apiKey="aem-assets-backend-nr-1"
+          apiKey="asset_search_service"
           imsToken={token}
-          handleSelection={(asset) => {
-            console.log(`Selected asset: ${util.inspect(asset, {showHidden: false, depth: null, colors: true})}`);
-            onCloseHandler();
-          }}
+          handleSelection={onSelectionHandler}
           onClose={onCloseHandler}
+          filterRepoList={filterRepos}
         />
-
-    {/* <DestinationSelector       
-        discoveryURL="https://aem-discovery.adobe.io"
-        apiKey="aem-assets-backend-nr-1"
-        imsOrg={ims.org}
-        imsToken={ims.token}
-    /> */}
-        
-        {/* <Flex width="100%" justifyContent="end" alignItems="center" marginTop="size-400">
-          <ButtonGroup align="end">
-            <Button variant="primary" onClick={onCloseHandler}>Close</Button>
-          </ButtonGroup>
-        </Flex> */}
       </Content>
     </Provider>
   );

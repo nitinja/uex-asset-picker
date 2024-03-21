@@ -7,6 +7,7 @@ import ErrorBoundary from "react-error-boundary";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import ExtensionRegistration from "./ExtensionRegistration";
 import OpenassetpickerModal from "./OpenassetpickerModal";
+import Openassetpicker from "./Openassetpicker";
 
 function App() {
   return (
@@ -21,6 +22,10 @@ function App() {
           <Route
             exact path="open-asset-picker-modal"
             element={<OpenassetpickerModal />}
+          />
+          <Route
+            exact path="open-asset-picker"
+            element={<Openassetpicker />}
           />
           {/* @todo YOUR CUSTOM ROUTES SHOULD BE HERE */}
         </Routes>
