@@ -1,6 +1,6 @@
-# uexassetpicker
+# Universal Editor Extension - Custom Asset Picker
 
-Welcome to my Adobe I/O Application!
+This is an extension of Universal Editor for picking AEM assets in different repositories than the one used by the editted page.
 
 ## Setup
 
@@ -62,11 +62,9 @@ You can generate this file using the command `aio app use`.
      before deploying it as a zipped action. Use this method if you want to keep
      your action's dependencies separated.
 
-## Debugging in VS Code
+## Customize the extension
 
-While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
-and select the debugging configuration called `WebAndActions`.
-Alternatively, there are also debug configs for only UI and each separate action.
+This extension assumes you have a component type `custom-asset` in your page component model, which is mapped to the custom field extension. You can edit it in the `src/aem-uex-1/web-src/components/ExtensionRegistration.js` file to map a different component type, or add more extensions to Universal Editor.
 
 ## Typescript support for UI
 
