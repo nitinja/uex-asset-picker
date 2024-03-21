@@ -33,9 +33,10 @@ You can generate this file using the command `aio app use`.
 ```bash
 # This file must **not** be committed to source control
 
-## please provide your Adobe I/O Runtime credentials
-# AIO_RUNTIME_AUTH=
-# AIO_RUNTIME_NAMESPACE=
+## Adobe I/O Runtime credentials
+AIO_runtime_auth=
+AIO_runtime_namespace=
+AIO_runtime_apihost=https://adobeioruntime.net
 ```
 
 ### `app.config.yaml`
@@ -64,7 +65,7 @@ You can generate this file using the command `aio app use`.
 
 ## Customize the extension
 
-This extension assumes you have a component type `custom-asset` in your page component model, which is mapped to the custom field extension. You can edit it in the `src/aem-uex-1/web-src/components/ExtensionRegistration.js` file to map a different component type, or add more extensions to Universal Editor.
+This extension assumes you have a component type `custom-asset` in your page component model, which is mapped to the custom field extension. You can edit it in [the extension registration file](src/aem-uex-1/web-src/components/ExtensionRegistration.js) to map a different component type, or add more extensions to Universal Editor.
 
 ## Typescript support for UI
 
