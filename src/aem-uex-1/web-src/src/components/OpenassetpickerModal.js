@@ -10,7 +10,7 @@ import {
   defaultTheme,
 } from "@adobe/react-spectrum";
 import { AssetSelector } from '@assets/selectors';
-import { extensionId } from "./Constants";
+import { assetSelectedEventName, extensionId } from "./Constants";
 
 export default function () {
   const [guestConnection, setGuestConnection] = useState();
@@ -31,7 +31,7 @@ export default function () {
   }, []);
 
   const onSelectionHandler = (asset) => {
-    localStorage.setItem('selectedAsset', asset[0]?._links['http://ns.adobe.com/adobecloud/rel/rendition'].href);
+    localStorage.setItem(assetSelectedEventName, asset[0]?._links['http://ns.adobe.com/adobecloud/rel/rendition'].href);
     onCloseHandler();
   };
 

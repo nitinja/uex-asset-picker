@@ -11,33 +11,13 @@ function ExtensionRegistration() {
     const guestConnection = await register({
       id: extensionId,
       methods: {
-        headerMenu: {
-          getButtons() {
-            return [
-              // @todo YOUR HEADER BUTTONS DECLARATION SHOULD BE HERE
-              {
-                id: 'asset-picker-modal',
-                label: 'Open Asset Picker',
-                icon: 'OpenIn',
-                onClick() {
-                  guestConnection.host.modal.showUrl({
-                    title: "Open Asset Picker",
-                    url: "/index.html#/open-asset-picker-modal",
-                    width: "80vw",
-                    height: "70vh",
-                  });
-                },
-              },
-            ];
-          },
-        },
         canvas: {
           getRenderers() {
             return [
               // @todo YOUR CUSTOM DATA FIELD RENDERERS DECLARATION SHOULD BE HERE
               {
                 extension: 'asset-picker-field',
-                dataType: 'reference',
+                dataType: 'custom-asset',
                 url: '/index.html#/open-asset-picker',
                 icon: 'OpenIn',
               },

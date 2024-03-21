@@ -2,7 +2,7 @@
  * <license header>
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { attach } from "@adobe/uix-guest";
 import {
   Provider,
@@ -11,24 +11,28 @@ import {
   Flex,
   TextField,
   ActionButton,
+  Text,
+  Image,
 } from "@adobe/react-spectrum";
-import { extensionId } from "./Constants";
+import { extensionId, assetSelectedEventName } from "./Constants";
 
 export default function () {
+  const customAssetField = useRef(null);
   const [guestConnection, setGuestConnection] = useState();
   const [model, setModel] = useState({});
   const [value, setValue] = useState('');
 
   const handleStorageChange = (event) => {
-    if (event.key === 'selectedAsset') {
+    if (event.key === assetSelectedEventName) {
       setValue(event.newValue);
+      customAssetField.current.focus();
+      localStorage.removeItem(assetSelectedEventName);
     }
   };
 
-  const onChangeHandler = (newValue) => {
-    // TODO onChange is not triggered when the value is set programmatically (upon local storage change)
-    // TODO onChange api is not working as expected (UE extension issue)
-    guestConnection.host.field.onChange('', newValue);
+  const onChangeHandler = (event) => {
+    const newValue = event.target.value;
+    guestConnection.host.field.onChange(newValue);
 };
 
   const init = async () => {
@@ -40,7 +44,7 @@ export default function () {
 
   useEffect(() => {
     init().catch((e) =>
-      console.log("Extension got the error during initialization:", e)
+      console.error("Extension got the error during initialization:", e)
     );
     window.addEventListener('storage', handleStorageChange);
 
@@ -56,7 +60,7 @@ export default function () {
     const getState = async () => {
       setModel(await guestConnection.host.field.getModel());
       if (!value) {
-        setValue(await guestConnection.host.field.getValue());
+        setValue(await guestConnection.host.field.getValue() || '');
       }
     };
     getState().catch((e) => console.error("Extension error:", e));
@@ -71,16 +75,29 @@ export default function () {
     });
   };
 
+  let url;
+  let name = '';
+  try {
+    url = new URL(value);
+    name = url?.pathname?.split('/')?.pop() || '';
+  } catch (e) {}
+
   return (
     <Provider theme={defaultTheme} colorScheme='light'>
       <Content>
-        <Flex direction="row">
-          <TextField value={value} flexGrow={1} isReadOnly onChange={onChangeHandler} />
-          <ActionButton
-            onPress={showModal}
-            aria-label='select asset'
-            marginStart="size-150">
-            Select asset
+        <Flex direction="column">
+          <Text>Custom asset</Text>
+          <TextField ref={customAssetField} value={value} flexGrow={1} isReadOnly onFocus={onChangeHandler} />
+          <ActionButton onPress={showModal} height="size-600" marginStart="size-150" isQuiet>
+            <Flex alignItems="center" margin="size-100">
+              {url && <Image width="size-400" height="size-400" src={url?.href || ''} alt={name} objectFit="cover" />}
+              {url && <Text marginStart="size-150">
+                {name}
+              </Text>}
+              {!url && <Text marginStart="size-150">
+                No asset selected
+              </Text>}
+            </Flex>
           </ActionButton>
         </Flex>
       </Content>
