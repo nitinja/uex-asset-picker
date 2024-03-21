@@ -65,7 +65,7 @@ AIO_runtime_apihost=https://adobeioruntime.net
 
 ## Customize the extension
 
-This extension assumes you have a component type `custom-asset` in your page component model, which is mapped to the custom field extension. You can edit it in [the extension registration file](src/aem-uex-1/web-src/components/ExtensionRegistration.js) to map a different component type, or add more extensions to Universal Editor.
+This extension assumes you have a component type `custom-asset` in your page component model, which is mapped to the custom field extension. You can edit it in [the extension registration file](src/aem-uex-1/web-src/src/components/ExtensionRegistration.js) to map a different component type, or add more extensions to Universal Editor.
 
 ## Typescript support for UI
 
