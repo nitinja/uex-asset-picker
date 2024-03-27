@@ -24,6 +24,15 @@ local serverless stack and also run your actions locally use the `aio app run --
 - `aio app deploy` to build and deploy all actions on Runtime and static files to CDN
 - `aio app undeploy` to undeploy the app
 
+## Use in Universal Editor
+
+In order to edit a page with Universal Editor, you normally go to `https://author-p12345-e67890.adobeaemcloud.com/ui#/@sitesinternal/aem/universal-editor/canvas/author-p12345-e67890.adobeaemcloud.com/content/site/index.html`.
+You can enable the extension by adding the `ext` query param to the URL.
+
+Examples:
+* Local extension dev: `https://author-p12345-e67890.adobeaemcloud.com/ui#/@sitesinternal/aem/universal-editor/canvas/author-p12345-e67890.adobeaemcloud.com/content/site/index.html?ext=https://localhost:9080`
+* Deployed extension: `https://author-p12345-e67890.adobeaemcloud.com/ui#/@sitesinternal/aem/universal-editor/canvas/author-p12345-e67890.adobeaemcloud.com/content/site/index.html?ext=https://[APP_BUILDER_NAMESPACE].adobeio-static.net/index.html`
+
 ## Config
 
 ### `.env`

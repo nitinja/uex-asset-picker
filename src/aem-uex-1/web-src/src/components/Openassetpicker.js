@@ -90,7 +90,7 @@ export default function () {
           <TextField ref={customAssetField} value={value} flexGrow={1} isReadOnly onFocus={onChangeHandler} />
           <ActionButton onPress={showModal} height="size-600" marginStart="size-150" isQuiet>
             <Flex alignItems="center" margin="size-100">
-              {url && <Image width="size-400" height="size-400" src={url?.href || ''} alt={name} objectFit="cover" />}
+              {url && <Image width="size-400" height="size-400" src={url.href || ''} alt={name} objectFit="cover" />}
               {url && <Text marginStart="size-150">
                 {name}
               </Text>}
