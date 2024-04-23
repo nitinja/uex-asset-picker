@@ -40,7 +40,8 @@ export default function () {
   };
 
   const filterRepos = (repos) => {
-    const repoName = endpoint.replace("https://", "").replace(/\/$/, "");
+    const repoUrl = new URL(endpoint);
+    const repoName = repoUrl.hostname;
     return repos.filter((repo) => {
       return (
         repo._embedded["http://ns.adobe.com/adobecloud/rel/repository"][
