@@ -10,7 +10,7 @@ import {
   defaultTheme,
 } from "@adobe/react-spectrum";
 import { AssetSelector } from '@assets/selectors';
-import { assetSelectedEventName, extensionId } from "./Constants";
+import { assetSelectedEventName, assetSelectedMimeTypeEventName, extensionId } from "./Constants";
 
 export default function () {
   const [guestConnection, setGuestConnection] = useState();
@@ -30,8 +30,19 @@ export default function () {
     );
   }, []);
 
-  const onSelectionHandler = (asset) => {
-    localStorage.setItem(assetSelectedEventName, asset[0]?._links['http://ns.adobe.com/adobecloud/rel/rendition'].href);
+  const onSelectionHandler = async (asset) => {
+
+    const assetType = asset[0]?._links['http://ns.adobe.com/adobecloud/rel/rendition']?.[0].type;
+    const assetLink = asset[0]?._links['http://ns.adobe.com/adobecloud/rel/rendition'].href;
+
+    console.log('asset 1:', assetLink);
+    console.log('asset 2:', assetType);
+    // console.log('asset:', JSON.stringify(asset));
+    console.log("setting items..");
+    window.localStorage.setItem("assetSelected", assetLink);
+    window.localStorage.setItem("assetMimeTypeSelected", assetType);
+    
+    // localStorage.setItem("assetMimeTypeSelected", assetType);
     onCloseHandler();
   };
 

@@ -16,11 +16,15 @@ import {
 } from "@adobe/react-spectrum";
 import { extensionId, assetSelectedEventName } from "./Constants";
 
+import config from "./config";
+
 export default function () {
   const customAssetField = useRef(null);
   const [guestConnection, setGuestConnection] = useState();
   const [model, setModel] = useState({});
   const [value, setValue] = useState('');
+
+  //console.log('config:', config);
 
   const handleStorageChange = (event) => {
     if (event.key === assetSelectedEventName) {
@@ -32,6 +36,8 @@ export default function () {
 
   const onChangeHandler = (event) => {
     const newValue = event.target.value;
+    // console.log('onChangeHandler newValue:', guestConnection.host.field);
+    
     guestConnection.host.field.onChange(newValue);
 };
 
@@ -39,6 +45,8 @@ export default function () {
     const connection = await attach({
       id: extensionId,
     });
+    //console.log('init connection:', guestConnection.host.field);
+    
     setGuestConnection(connection);
   };
 
@@ -58,6 +66,8 @@ export default function () {
       return;
     }
     const getState = async () => {
+      console.log('value getState:', guestConnection.host.field.getValue());
+      
       setModel(await guestConnection.host.field.getModel());
       if (!value) {
         setValue(await guestConnection.host.field.getValue() || '');
@@ -86,7 +96,7 @@ export default function () {
     <Provider theme={defaultTheme} colorScheme='light'>
       <Content>
         <Flex direction="column">
-          <Text>Custom asset</Text>
+          <Text>Custom asset 1</Text>
           <TextField ref={customAssetField} value={value} flexGrow={1} isReadOnly onFocus={onChangeHandler} />
           <ActionButton onPress={showModal} height="size-600" marginStart="size-150" isQuiet>
             <Flex alignItems="center" margin="size-100">
