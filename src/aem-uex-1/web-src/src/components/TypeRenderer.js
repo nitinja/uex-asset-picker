@@ -100,7 +100,6 @@ export default () => {
   return (
     <Provider theme={lightTheme} colorScheme="light">
       {!isLoading ? (
-        <>
           <Flex direction="column" gap="size-65" marginBottom="size-100">
             <TextField
               validationState={error ? "invalid" : validationState}
@@ -109,15 +108,14 @@ export default () => {
               defaultValue={value}
               value={value}
               maxLength={model.validation.maxLength}
-              isReadOnly={model.readOnly}
-              isDisabled={model.readOnly}
+              isReadOnly={true}
+              isDisabled={true}
               isRequired={model.required}
               errorMessage={error}
               onChange={onChangeHandler}
               width="100%"
             />
           </Flex>
-        </>
       ) : (
         <View width="97%" height="100%">
           <ProgressCircle />

@@ -2,7 +2,7 @@
  * <license header>
  */
 
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ErrorBoundary from "react-error-boundary";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import ExtensionRegistration from "./ExtensionRegistration";
@@ -10,38 +10,55 @@ import OpenassetpickerModal from "./OpenassetpickerModal";
 import Openassetpicker from "./Openassetpicker";
 import TypeRenderer from "./TypeRenderer";
 import RenditionSelect from "./RenditionSelect";
+import InfoField from "./SetFilterAttribute";
+import SetFilterAttribute from "./SetFilterAttribute";
+
+/**
+ * Filter object:
+ * {
+ *  "custom-image-rendition-filter": "renditionName",
+ *  "custom-asset-mimetype-filter": "mimeType"
+ * }
+ */
 
 function App() {
   return (
-    <Router>
-      <ErrorBoundary onError={onError} FallbackComponent={fallbackComponent}>
-        <Routes>
-          <Route index element={<ExtensionRegistration />} />
-          <Route
-            exact path="index.html"
-            element={<ExtensionRegistration />}
-          />
-          <Route
-            exact path="open-asset-picker-modal"
-            element={<OpenassetpickerModal />}
-          />
-          <Route
-            exact path="open-asset-picker"
-            element={<Openassetpicker />}
-          />
-          <Route
-                exact path="renderer/:rendererId"
-                element={<TypeRenderer/>}
+    <>
+      <Router>
+        <ErrorBoundary onError={onError} FallbackComponent={fallbackComponent}>
+          <Routes>
+            <Route index element={<ExtensionRegistration />} />
+            <Route
+              exact
+              path="index.html"
+              element={<ExtensionRegistration />}
             />
-          <Route
-                exact path="rendition-select"
-                element={<RenditionSelect/>}
+            <Route
+              exact
+              path="open-asset-picker-modal"
+              element={<OpenassetpickerModal />}
             />
-          {/* @todo YOUR CUSTOM ROUTES SHOULD BE HERE */}
-        </Routes>
-      </ErrorBoundary>
-    </Router>
-  )
+            <Route
+              exact
+              path="open-asset-picker"
+              element={<Openassetpicker />}
+            />
+            <Route
+              exact
+              path="renderer/:rendererId"
+              element={<TypeRenderer />}
+            />
+            <Route
+              exact
+              path="set-filter-attribute/:filterKey"
+              element={<SetFilterAttribute />}
+            />
+            {/* @todo YOUR CUSTOM ROUTES SHOULD BE HERE */}
+          </Routes>
+        </ErrorBoundary>
+      </Router>
+    </>
+  );
 
   // Methods
 

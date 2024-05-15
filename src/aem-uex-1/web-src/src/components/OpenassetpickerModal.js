@@ -12,6 +12,31 @@ import {
 import { AssetSelector } from '@assets/selectors';
 import { assetSelectedEventName, assetSelectedMimeTypeEventName, extensionId } from "./Constants";
 
+
+const filterSchema = [
+    {
+      "fields": [
+        {
+          "element": "checkbox",
+          "name": "type",
+          "defaultValue": [
+            "image/*"
+          ],
+          "options": [
+            {
+              "label": "Video",
+              "value": "video/*",
+              "readOnly": true
+            }
+          ],
+          "orientation": "horizontal"
+        }
+      ],
+      "header": "File Type",
+      "groupKey": "FileTypeGroup"
+    }
+  ];
+
 export default function () {
   const [guestConnection, setGuestConnection] = useState();
   const [endpoint, setEndpoint] = useState("");
@@ -99,6 +124,7 @@ export default function () {
           handleSelection={onSelectionHandler}
           onClose={onCloseHandler}
           filterRepoList={filterRepos}
+         
         />
       </Content>
     </Provider>

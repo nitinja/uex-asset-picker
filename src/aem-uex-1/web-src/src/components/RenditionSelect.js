@@ -26,8 +26,8 @@ export default () => {
   const [isLoading, setIsLoading] = useState(true);
   const [connection, setConnection] = useState();
   const [model, setModel] = useState();
-  const [value, setValue] = useState('');
-  const [error, setError] = useState('');
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
   const [validationState, setValidationState] = useState();
 
   // localStorage.setItem(assetSelectedMimeTypeEventName
@@ -37,11 +37,11 @@ export default () => {
       const guestConnection = await attach({ id: extensionId });
       setConnection(guestConnection);
       console.log("setting connection: ", guestConnection);
-      
+
       // get model
       setModel(await guestConnection.host.field.getModel());
       // get field value
-      setValue(await guestConnection.host.field.getValue() || "");
+      setValue((await guestConnection.host.field.getValue()) || "");
       // get field error
       setError(await guestConnection.host.field.getError());
       // get field validation state
@@ -53,20 +53,20 @@ export default () => {
     );
   }, []);
 
-  
-  const onChangeHandler = useCallback((v) => {
-    console.log("onChange on extension side", v, connection);
-    console.log("connection: ", connection);
-    connection.host.field.onChange(v);
-    setValue(v);
-  }, [connection]);
+  const onChangeHandler = useCallback(
+    (v) => {
+      console.log("onChange on extension side", v, connection);
+      console.log("connection: ", connection);
+      //connection.host.field.onChange(v);
+      setValue(v);
+    },
+    [connection]
+  );
 
   const handleStorageChange = useCallback((event) => {
     console.log("storage event", event);
-    
-    if (event.key === assetSelectedMimeTypeEventName) {
 
-    
+    if (event.key === assetSelectedMimeTypeEventName) {
       console.log("storage set event.newValue", event.newValue);
 
       setValue(event.newValue);
@@ -77,13 +77,13 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    if(connection){
-      connection.host.field.onChange(value);
+    if (connection) {
+      //connection.host.field.onChange(value);
     }
   }, [value, connection]);
-  
+
   // useEffect(() => {
-    
+
   //   window.addEventListener("storage", handleStorageChange);
 
   //   return () => {
@@ -94,7 +94,6 @@ export default () => {
   return (
     <Provider theme={lightTheme} colorScheme="light">
       {!isLoading ? (
-        <>
           <Flex direction="column" gap="size-65" marginBottom="size-100">
             <TextField
               validationState={error ? "invalid" : validationState}
@@ -103,15 +102,14 @@ export default () => {
               defaultValue={value}
               value={value}
               maxLength={model.validation.maxLength}
-              isReadOnly={model.readOnly}
-              isDisabled={model.readOnly}
-              isRequired={model.required}
+              isReadOnly={true}
+              isDisabled={true}
               errorMessage={error}
               onChange={onChangeHandler}
               width="100%"
+              readOnly={true}
             />
           </Flex>
-        </>
       ) : (
         <View width="97%" height="100%">
           <ProgressCircle />

@@ -2,7 +2,7 @@
  * <license header>
  */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { attach } from "@adobe/uix-guest";
 import {
   Provider,
@@ -23,6 +23,20 @@ export default function () {
   const [guestConnection, setGuestConnection] = useState();
   const [model, setModel] = useState({});
   const [value, setValue] = useState('');
+  const [random, setRandom] = useState(Math.random());
+  const [filterObject, setFilterObject] = useState({});
+
+  const addFilterKey = useCallback((filterKey, filterValue) => {
+    setFilterObject({
+      ...filterObject,
+      [filterKey]: filterValue,
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("Filter object in asset picker: ", filterObject);
+  }, [filterObject]);
+
 
   //console.log('config:', config);
 
@@ -30,8 +44,15 @@ export default function () {
     if (event.key === assetSelectedEventName) {
       setValue(event.newValue);
       customAssetField.current.focus();
-      localStorage.removeItem(assetSelectedEventName);
+    } else if (event.key.startsWith("filterKeyAdded")) {
+      const receivedFilterObject = JSON.parse(event.newValue);
+      console.log("extsing : receivedFilterObject: random", filterObject, receivedFilterObject, random);
+      setFilterObject(oldFilterObject => ({
+        ...oldFilterObject,
+        ...receivedFilterObject,
+      }));
     }
+    localStorage.removeItem(event.key);
   };
 
   const onChangeHandler = (event) => {
@@ -94,9 +115,10 @@ export default function () {
 
   return (
     <Provider theme={defaultTheme} colorScheme='light'>
+      {JSON.stringify(filterObject)}
       <Content>
         <Flex direction="column">
-          <Text>Custom asset 1</Text>
+          <Text>Custom asset</Text>
           <TextField ref={customAssetField} value={value} flexGrow={1} isReadOnly onFocus={onChangeHandler} />
           <ActionButton onPress={showModal} height="size-600" marginStart="size-150" isQuiet>
             <Flex alignItems="center" margin="size-100">
