@@ -12,6 +12,28 @@ import {
   extensionId,
 } from "./Constants";
 
+// const filterSchema = [
+//   {
+//     fields: [
+//       {
+//         element: "checkbox",
+//         name: "type",
+//         defaultValue: ["image/*"],
+//         options: [
+//           {
+//             label: "Image",
+//             value: "image/*",
+//             readOnly: true,
+//           },
+//         ],
+//         orientation: "horizontal",
+//       },
+//     ],
+//     header: "File Type",
+//     groupKey: "FileTypeGroup",
+//   },
+// ];
+
 async function fetchExtConfig() {
   let assetSelectorConfig = {};
   try {
@@ -128,14 +150,12 @@ export default function () {
       <Content>
         {JSON.stringify(assetSelectorProps)}
         <AssetSelector
-          aemTierType={["delivery", "author"]}
           dialogSize="fullscreen"
-          apiKey="asset_search_service"
           imsToken={token}
           handleSelection={onSelectionHandler}
           onClose={onCloseHandler}
           filterRepoList={filterRepos}
-          filterSchema={assetSelectorProps.filterSchema}
+          {...assetSelectorProps}
         />
       </Content>
     </Provider>
