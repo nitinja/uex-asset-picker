@@ -2,16 +2,14 @@
  * <license header>
  */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import ErrorBoundary from "react-error-boundary";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, HashRouter as Router, Routes } from "react-router-dom";
 import ExtensionRegistration from "./ExtensionRegistration";
-import OpenassetpickerModal from "./OpenassetpickerModal";
 import Openassetpicker from "./Openassetpicker";
-import TypeRenderer from "./TypeRenderer";
-import RenditionSelect from "./RenditionSelect";
-import InfoField from "./SetFilterAttribute";
+import OpenassetpickerModal from "./OpenassetpickerModal";
 import SetFilterAttribute from "./SetFilterAttribute";
+import TypeRenderer from "./TypeRenderer";
 
 /**
  * Filter object:

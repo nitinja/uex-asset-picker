@@ -68,7 +68,7 @@ export default () => {
   }, [connection]);
 
   const handleStorageChange = useCallback((event) => {
-    console.log("storage event", event);
+    //console.log("storage event", event);
     
     if (event.key === assetSelectedMimeTypeEventName) {
 

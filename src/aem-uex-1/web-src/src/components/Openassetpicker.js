@@ -16,40 +16,23 @@ import {
 } from "@adobe/react-spectrum";
 import { extensionId, assetSelectedEventName } from "./Constants";
 
-import config from "./config";
-
 export default function () {
   const customAssetField = useRef(null);
   const [guestConnection, setGuestConnection] = useState();
   const [model, setModel] = useState({});
   const [value, setValue] = useState('');
   const [random, setRandom] = useState(Math.random());
-  const [filterObject, setFilterObject] = useState({});
-
-  const addFilterKey = useCallback((filterKey, filterValue) => {
-    setFilterObject({
-      ...filterObject,
-      [filterKey]: filterValue,
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log("Filter object in asset picker: ", filterObject);
-  }, [filterObject]);
-
-
-  //console.log('config:', config);
+  const [config, setConfig] = useState({});
 
   const handleStorageChange = (event) => {
     if (event.key === assetSelectedEventName) {
       setValue(event.newValue);
       customAssetField.current.focus();
     } else if (event.key.startsWith("filterKeyAdded")) {
-      const receivedFilterObject = JSON.parse(event.newValue);
-      console.log("extsing : receivedFilterObject: random", filterObject, receivedFilterObject, random);
-      setFilterObject(oldFilterObject => ({
-        ...oldFilterObject,
-        ...receivedFilterObject,
+      const receivedConfigObject = JSON.parse(event.newValue);
+      setConfig(oldConfigObject => ({
+        ...oldConfigObject,
+        ...receivedConfigObject,
       }));
     }
     localStorage.removeItem(event.key);
@@ -57,8 +40,6 @@ export default function () {
 
   const onChangeHandler = (event) => {
     const newValue = event.target.value;
-    // console.log('onChangeHandler newValue:', guestConnection.host.field);
-    
     guestConnection.host.field.onChange(newValue);
 };
 
@@ -66,8 +47,6 @@ export default function () {
     const connection = await attach({
       id: extensionId,
     });
-    //console.log('init connection:', guestConnection.host.field);
-    
     setGuestConnection(connection);
   };
 
@@ -98,6 +77,7 @@ export default function () {
   }, [guestConnection]);
 
   const showModal = () => {
+    window.localStorage.setItem("assetSelectorConfig", JSON.stringify(config));
     guestConnection.host.modal.showUrl({
       title: "Asset Picker",
       url: "/index.html#/open-asset-picker-modal",
@@ -115,7 +95,7 @@ export default function () {
 
   return (
     <Provider theme={defaultTheme} colorScheme='light'>
-      {JSON.stringify(filterObject)}
+      {JSON.stringify(config)}
       <Content>
         <Flex direction="column">
           <Text>Custom asset</Text>

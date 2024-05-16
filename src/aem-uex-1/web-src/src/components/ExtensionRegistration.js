@@ -38,6 +38,12 @@ function ExtensionRegistration() {
                 dataType: 'custom-asset-mimetype-filter',
                 url: '/index.html#/set-filter-attribute/custom-asset-mimetype-filter',
                 icon: 'OpenIn',
+              },
+              {
+                extension: 'asset-picker-field',
+                dataType: 'extConfigUrl',
+                url: '/index.html#/set-filter-attribute/extConfigUrl',
+                icon: 'OpenIn',
               }
             ];
           },

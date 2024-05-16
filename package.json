@@ -11,6 +11,7 @@
     "@assets/microfrontend": "^0.15.0",
     "@assets/selectors": "*",
     "@react-spectrum/list": "^3.0.0-rc.0",
+    "@react/react-spectrum": "^2.41.0",
     "@spectrum-icons/workflow": "^3.2.0",
     "chalk": "^4",
     "core-js": "^3.6.4",
