@@ -60,7 +60,7 @@ async function buildSelectorProps() {
   props.filterSchema = extConfig.filterSchema || [];
   props.aemTierType = extConfig.aemTierType || ["delivery", "author"];
   props.apiKey = extConfig.apiKey || "asset_search_service";
-
+  // props.
   console.log("props", props);
   return props;
 }
@@ -77,7 +77,9 @@ export default function () {
       id: extensionId,
     });
     setGuestConnection(connection);
-    setAssetSelectorProps(await buildSelectorProps());
+    const selectorProps = await buildSelectorProps();
+    // selectorProps.filterRepoList = filterRepos;
+    setAssetSelectorProps(selectorProps);
   };
 
   useEffect(() => {
@@ -106,6 +108,7 @@ export default function () {
   };
 
   const filterRepos = (repos) => {
+    console.log("conf: ", assetSelectorProps);
     const repoUrl = new URL(endpoint);
     const repoName = repoUrl.hostname;
     console.log("repoName", repoName);
@@ -150,7 +153,9 @@ export default function () {
       <Content>
         {JSON.stringify(assetSelectorProps)}
         <AssetSelector
+          // aemTierType={["delivery", "author"]}
           dialogSize="fullscreen"
+          // apiKey="asset_search_service"
           imsToken={token}
           handleSelection={onSelectionHandler}
           onClose={onCloseHandler}
