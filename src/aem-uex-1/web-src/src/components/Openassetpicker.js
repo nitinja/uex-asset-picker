@@ -22,18 +22,14 @@ export default function () {
   const [model, setModel] = useState({});
   const [value, setValue] = useState('');
   const [random, setRandom] = useState(Math.random());
-  const [config, setConfig] = useState({});
+  const [extConfigUrl, setExtConfigUrl] = useState("");
 
   const handleStorageChange = (event) => {
-    if (event.key === assetSelectedEventName) {
+    if (event.key === assetSelectedEventName && event.newValue) {
       setValue(event.newValue);
       customAssetField.current.focus();
-    } else if (event.key.startsWith("filterKeyAdded")) {
-      const receivedConfigObject = JSON.parse(event.newValue);
-      setConfig(oldConfigObject => ({
-        ...oldConfigObject,
-        ...receivedConfigObject,
-      }));
+    } else if (event.key === "set-ext-config-url" && event.newValue) {
+      setExtConfigUrl(event.newValue);
     }
     localStorage.removeItem(event.key);
   };
@@ -77,7 +73,7 @@ export default function () {
   }, [guestConnection]);
 
   const showModal = () => {
-    window.localStorage.setItem("assetSelectorConfig", JSON.stringify(config));
+    window.localStorage.setItem("assetSelectorConfig", extConfigUrl);
     guestConnection.host.modal.showUrl({
       title: "Asset Picker",
       url: "/index.html#/open-asset-picker-modal",
@@ -95,7 +91,7 @@ export default function () {
 
   return (
     <Provider theme={defaultTheme} colorScheme='light'>
-      {JSON.stringify(config)}
+      {/* {JSON.stringify(extConfigUrl)} */}
       <Content>
         <Flex direction="column">
           <Text>Custom asset</Text>

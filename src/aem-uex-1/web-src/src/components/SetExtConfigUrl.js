@@ -9,11 +9,10 @@ import { extensionId } from "./Constants";
 
 export default () => {
 
-  const { filterKey } = useParams();
   useEffect(() => {
     const init = async () => {
       const guestConnection = await attach({ id: extensionId });
-      window.localStorage.setItem(`filterKeyAdded:${filterKey}`, JSON.stringify({[filterKey]: (await guestConnection.host.field.getValue()) || ""}));
+      window.localStorage.setItem("set-ext-config-url", await guestConnection.host.field.getValue() || "");
     };
     init().catch((e) =>
       console.log("Extension got the error during initialization:", e)

@@ -8,8 +8,8 @@ import { Route, HashRouter as Router, Routes } from "react-router-dom";
 import ExtensionRegistration from "./ExtensionRegistration";
 import Openassetpicker from "./Openassetpicker";
 import OpenassetpickerModal from "./OpenassetpickerModal";
-import SetFilterAttribute from "./SetFilterAttribute";
-import TypeRenderer from "./TypeRenderer";
+import SetMimeType from "./SetMimeType";
+import SetExtConfigUrl from "./SetExtConfigUrl";
 
 /**
  * Filter object:
@@ -44,12 +44,12 @@ function App() {
             <Route
               exact
               path="renderer/:rendererId"
-              element={<TypeRenderer />}
+              element={<SetMimeType />}
             />
             <Route
               exact
-              path="set-filter-attribute/:filterKey"
-              element={<SetFilterAttribute />}
+              path="set-ext-config-url"
+              element={<SetExtConfigUrl />}
             />
             {/* @todo YOUR CUSTOM ROUTES SHOULD BE HERE */}
           </Routes>

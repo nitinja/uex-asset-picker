@@ -12,40 +12,15 @@ import {
   extensionId,
 } from "./Constants";
 
-// const filterSchema = [
-//   {
-//     fields: [
-//       {
-//         element: "checkbox",
-//         name: "type",
-//         defaultValue: ["image/*"],
-//         options: [
-//           {
-//             label: "Image",
-//             value: "image/*",
-//             readOnly: true,
-//           },
-//         ],
-//         orientation: "horizontal",
-//       },
-//     ],
-//     header: "File Type",
-//     groupKey: "FileTypeGroup",
-//   },
-// ];
-
 async function fetchExtConfig() {
-  let assetSelectorConfig = {};
+  let assetSelectorConfigUrl = {};
   try {
-    assetSelectorConfig = localStorage.getItem("assetSelectorConfig");
-    if (assetSelectorConfig) {
-      assetSelectorConfig = JSON.parse(assetSelectorConfig);
-      if (assetSelectorConfig.extConfigUrl) {
-        const extConfig = await fetch(assetSelectorConfig.extConfigUrl)
+    assetSelectorConfigUrl = localStorage.getItem("assetSelectorConfig");
+    if (assetSelectorConfigUrl) {
+        const extConfig = await fetch(assetSelectorConfigUrl)
           .then((response) => response.json())
           .catch((e) => console.error("Error while fetching extConfig:", e));
           return extConfig;
-        }
     }
   } catch (e) {
     console.log("Error while getting assetSelectorConfig from localStorage", e);
@@ -60,8 +35,6 @@ async function buildSelectorProps() {
   props.filterSchema = extConfig.filterSchema || [];
   props.aemTierType = extConfig.aemTierType || ["delivery", "author"];
   props.apiKey = extConfig.apiKey || "asset_search_service";
-  // props.
-  console.log("props", props);
   return props;
 }
 
@@ -78,7 +51,6 @@ export default function () {
     });
     setGuestConnection(connection);
     const selectorProps = await buildSelectorProps();
-    // selectorProps.filterRepoList = filterRepos;
     setAssetSelectorProps(selectorProps);
   };
 
@@ -89,11 +61,8 @@ export default function () {
   }, []);
 
   const onSelectionHandler = async (asset) => {
-    console.log("asset selected", JSON.stringify(asset[0]));
-    
-    const assetType =
-      asset[0]?._links["http://ns.adobe.com/adobecloud/rel/rendition"]?.[0]
-        .type;
+    // console.log("asset selected", JSON.stringify(asset[0]?._links["http://ns.adobe.com/adobecloud/rel/rendition"]));
+    const assetType = asset[0].mimetype;
     const assetLink =
       asset[0]?._links["http://ns.adobe.com/adobecloud/rel/rendition"].href;
 
@@ -151,11 +120,9 @@ export default function () {
   return (
     <Provider theme={defaultTheme} colorScheme="light">
       <Content>
-        {JSON.stringify(assetSelectorProps)}
+        {/* {JSON.stringify(assetSelectorProps)} */}
         <AssetSelector
-          // aemTierType={["delivery", "author"]}
           dialogSize="fullscreen"
-          // apiKey="asset_search_service"
           imsToken={token}
           handleSelection={onSelectionHandler}
           onClose={onCloseHandler}

@@ -29,20 +29,8 @@ function ExtensionRegistration() {
               },
               {
                 extension: 'asset-picker-field',
-                dataType: 'custom-image-rendition-filter',
-                url: '/index.html#/set-filter-attribute/custom-image-rendition-filter',
-                icon: 'OpenIn',
-              },
-              {
-                extension: 'asset-picker-field',
-                dataType: 'custom-asset-mimetype-filter',
-                url: '/index.html#/set-filter-attribute/custom-asset-mimetype-filter',
-                icon: 'OpenIn',
-              },
-              {
-                extension: 'asset-picker-field',
                 dataType: 'extConfigUrl',
-                url: '/index.html#/set-filter-attribute/extConfigUrl',
+                url: '/index.html#/set-ext-config-url',
                 icon: 'OpenIn',
               }
             ];
