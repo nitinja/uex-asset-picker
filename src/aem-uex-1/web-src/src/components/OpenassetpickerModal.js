@@ -17,10 +17,10 @@ async function fetchExtConfig() {
   try {
     assetSelectorConfigUrl = localStorage.getItem("assetSelectorConfig");
     if (assetSelectorConfigUrl) {
-        const extConfig = await fetch(assetSelectorConfigUrl)
-          .then((response) => response.json())
-          .catch((e) => console.error("Error while fetching extConfig:", e));
-          return extConfig;
+      const extConfig = await fetch(assetSelectorConfigUrl)
+        .then((response) => response.json())
+        .catch((e) => console.error("Error while fetching extConfig:", e));
+      return extConfig;
     }
   } catch (e) {
     console.log("Error while getting assetSelectorConfig from localStorage", e);
@@ -35,6 +35,7 @@ async function buildSelectorProps() {
   props.filterSchema = extConfig.filterSchema || [];
   props.aemTierType = extConfig.aemTierType || ["delivery", "author"];
   props.apiKey = extConfig.apiKey || "asset_search_service";
+  props.repoNames = extConfig.repoNames?.length ? extConfig.repoNames : null;
   return props;
 }
 
@@ -63,11 +64,15 @@ export default function () {
   const onSelectionHandler = async (asset) => {
     // console.log("asset selected", JSON.stringify(asset[0]?._links["http://ns.adobe.com/adobecloud/rel/rendition"]));
     const assetType = asset[0].mimetype;
-    const assetLink =
+    const assetUrl =
       asset[0]?._links["http://ns.adobe.com/adobecloud/rel/rendition"].href;
 
-    window.localStorage.setItem("assetSelected", assetLink);
-    window.localStorage.setItem("assetMimeTypeSelected", assetType);
+    window.localStorage.setItem(assetSelectedEventName, JSON.stringify({
+      assetUrl,
+      assetType,
+      assetName: asset[0].name,
+    }));
+    // window.localStorage.setItem("assetMimeTypeSelected", assetType);
 
     onCloseHandler();
   };
@@ -76,20 +81,25 @@ export default function () {
     guestConnection.host.modal.close();
   };
 
-  const filterRepos = (repos) => {
-    console.log("conf: ", assetSelectorProps);
-    const repoUrl = new URL(endpoint);
-    const repoName = repoUrl.hostname;
-    console.log("repoName", repoName);
+  const gerReposNameFromEndpoint = () => {
+    try {
+      const repoUrl = new URL(endpoint);
+      return [repoUrl.hostname];
+    } catch (e) {
+      console.log("Error while getting repoName", e);
+      return [];
+    }
+  };
 
+  const filterRepos = (repos) => {
+    const repoNames = assetSelectorProps.repoNames || gerReposNameFromEndpoint();
+    console.log("using repoNames", repos, repoNames);
     return repos.filter((repo) => {
+      const repoField =
+        repo._embedded["http://ns.adobe.com/adobecloud/rel/repository"];
       return (
-        repo._embedded["http://ns.adobe.com/adobecloud/rel/repository"][
-          "aem:tier"
-        ] === "delivery" ||
-        repo._embedded["http://ns.adobe.com/adobecloud/rel/repository"][
-          "repo:repositoryId"
-        ] === repoName
+        repoField["aem:tier"] === "delivery" ||
+        repoNames.includes(repoField["repo:repositoryId"])
       );
     });
   };

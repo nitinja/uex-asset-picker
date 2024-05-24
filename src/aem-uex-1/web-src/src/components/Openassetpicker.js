@@ -13,31 +13,35 @@ import {
   ActionButton,
   Text,
   Image,
+  View,
+  Well,
+  LabeledValue,
 } from "@adobe/react-spectrum";
+import { Label } from "@react-spectrum/label";
+import Close from "@spectrum-icons/workflow/Close";
+
 import { extensionId, assetSelectedEventName } from "./Constants";
 
 export default function () {
-  const customAssetField = useRef(null);
+  // const customAssetField = useRef(null);
   const [guestConnection, setGuestConnection] = useState();
-  const [model, setModel] = useState({});
-  const [value, setValue] = useState('');
-  const [random, setRandom] = useState(Math.random());
+  const [assetUrl, setAssetUrl] = useState("");
+  const [assetName, setAssetName] = useState("");
   const [extConfigUrl, setExtConfigUrl] = useState("");
+  const [fieldLabel, setFieldLabel] = useState("");
 
   const handleStorageChange = (event) => {
     if (event.key === assetSelectedEventName && event.newValue) {
-      setValue(event.newValue);
-      customAssetField.current.focus();
-    } else if (event.key === "set-ext-config-url" && event.newValue) {
-      setExtConfigUrl(event.newValue);
+      const asset = JSON.parse(event.newValue);
+      setAssetUrl(asset.assetUrl);
+      // setAssetName(asset.assetName);
     }
     localStorage.removeItem(event.key);
   };
 
-  const onChangeHandler = (event) => {
-    const newValue = event.target.value;
-    guestConnection.host.field.onChange(newValue);
-};
+  useEffect(() => {
+    guestConnection?.host.field.onChange(assetUrl);
+  }, [assetUrl]);
 
   const init = async () => {
     const connection = await attach({
@@ -50,10 +54,10 @@ export default function () {
     init().catch((e) =>
       console.error("Extension got the error during initialization:", e)
     );
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
@@ -62,11 +66,18 @@ export default function () {
       return;
     }
     const getState = async () => {
-      console.log('value getState:', guestConnection.host.field.getValue());
-      
-      setModel(await guestConnection.host.field.getModel());
-      if (!value) {
-        setValue(await guestConnection.host.field.getValue() || '');
+      console.log(
+        "value getState:",
+        await guestConnection.host.field.getValue()
+      );
+      console.log("value model:", await guestConnection.host.field.getModel());
+
+      const model = await guestConnection.host.field.getModel();
+      setExtConfigUrl(model.configUrl);
+      setFieldLabel(model.label || "Asset");
+
+      if (!assetUrl) {
+        setAssetUrl((await guestConnection.host.field.getValue()) || "");
       }
     };
     getState().catch((e) => console.error("Extension error:", e));
@@ -81,34 +92,58 @@ export default function () {
       height: "70vh",
     });
   };
+  
+  const removeAsset = () => {
+    setAssetUrl("");
+    setAssetName("");
+  }
 
-  let url;
-  let name = '';
-  try {
-    url = new URL(value);
-    name = url?.pathname?.split('/')?.pop() || '';
-  } catch (e) {}
+  useEffect(() => {
+    if (assetUrl) {
+      try {
+        const name = new URL(assetUrl).pathname?.split("/")?.pop() || "";
+        setAssetName(name);
+      } catch (e) {}
+    }
+  }, [assetUrl]);
 
   return (
-    <Provider theme={defaultTheme} colorScheme='light'>
+    <Provider theme={defaultTheme} colorScheme="light">
       {/* {JSON.stringify(extConfigUrl)} */}
-      <Content>
-        <Flex direction="column">
-          <Text>Custom asset</Text>
-          <TextField ref={customAssetField} value={value} flexGrow={1} isReadOnly onFocus={onChangeHandler} />
-          <ActionButton onPress={showModal} height="size-600" marginStart="size-150" isQuiet>
-            <Flex alignItems="center" margin="size-100">
-              {url && <Image width="size-400" height="size-400" src={url.href || ''} alt={name} objectFit="cover" />}
-              {url && <Text marginStart="size-150">
-                {name}
-              </Text>}
-              {!url && <Text marginStart="size-150">
-                No asset selected
-              </Text>}
-            </Flex>
-          </ActionButton>
-        </Flex>
-      </Content>
+      <View backgroundColor={"gray-75"} marginBottom={"size-200"}>
+        {/* {imageUrl} */}
+        <Label>{fieldLabel}</Label>
+        <View
+          borderWidth="thin"
+          borderColor="gray-200"
+          borderRadius="medium"
+          padding="size-75"
+          backgroundColor={"gray-100"}
+        >
+          <Flex alignItems="center">
+            
+            <ActionButton onPress={showModal} isQuiet={!assetName}>
+              {!assetUrl ? "+ Add" : null}
+              <Flex alignItems="center">
+                {assetUrl && (
+                  <Image
+                    width="size-400"
+                    height="size-400"
+                    src={assetUrl || ""}
+                    objectFit="cover"
+                  />
+                )}
+                <Text>{assetName}</Text>
+              </Flex>
+            </ActionButton>
+            {assetUrl && (
+              <ActionButton onPress={removeAsset} isQuiet>
+                <Close />
+              </ActionButton>
+            )}
+          </Flex>
+        </View>
+      </View>
     </Provider>
   );
 }

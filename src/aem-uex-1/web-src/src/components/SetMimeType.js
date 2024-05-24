@@ -13,7 +13,7 @@ import {
 import { attach } from "@adobe/uix-guest";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { assetSelectedMimeTypeEventName, extensionId } from "./Constants";
+import { assetSelectedEventName, extensionId } from "./Constants";
 
 export default () => {
   const [connection, setConnection] = useState();
@@ -31,9 +31,10 @@ export default () => {
   }, []);
 
   const handleStorageChange = useCallback((event) => {
-    if (event.key === assetSelectedMimeTypeEventName && event.newValue) {
-      setValue(event.newValue);
-      localStorage.removeItem(assetSelectedMimeTypeEventName);
+    if (event.key === assetSelectedEventName && event.newValue) {
+      const asset = JSON.parse(event.newValue);
+      setValue(asset.assetType);
+      localStorage.removeItem(event.key);
     }
   }, []);
 
